@@ -13,9 +13,18 @@ init()
 duration = 1
 freq = 440
 
-response = requests.get(
-    'http://spreadsheets.google.com/feeds/cells/1HzL02Oyax9U-aak9idadwOr6s7SoD1IXBunyiS2L8-8/4/public/full?alt=json',
-    verify=False)
+with open(dir_path + "/config.yaml") as f:
+    docs = yaml.load_all(f, Loader=yaml.FullLoader)
+    for doc in docs:
+        for k, v in doc.items():
+            if k == 'purple':
+                purple_set = v
+            elif k == 'green':
+                green_set = v
+            elif k == 'site':
+                site = v
+
+response = requests.get(str(site), verify=False)
 data = loads(response.content)
 feed = data['feed']
 
@@ -38,14 +47,6 @@ def json_extract(obj, key):
     values = extract(obj, arr, key)
     return values
 
-with open(dir_path +"/config.yaml") as f:
-    docs = yaml.load_all(f, Loader=yaml.FullLoader)
-    for doc in docs:
-        for k, v in doc.items():
-            if k == 'purple':
-                purple_set = v
-            elif k == 'green':
-                green_set = v
 
 myval = json_extract(feed, "$t")
 
