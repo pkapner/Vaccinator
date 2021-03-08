@@ -3,9 +3,15 @@ purple:
   - York
   - Taft
   - Medgar
+  - Wingate
+  - Capsule
+  - Brandeis
+  - Yankee
 ---
 green:
-  - Staten
-  - Richmond
+  - Javits
+  - Aqueduct
+  - Westchester
+  - Jones
 ---
-site: http://spreadsheets.google.com/feeds/cells/1EHaZgbEPn1y5wKE4Enx65zIsIxSL7-bPIHvNcAKrMEo/3/public/full?alt=json
+site: http://spreadsheets.google.com/feeds/cells/1NNZJWI7BYlajdBcqkEpOXXq6EZZyMd-zSIGKHNgS99w/4/public/full?alt=json
