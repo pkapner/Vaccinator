@@ -3,7 +3,7 @@ import requests
 from json import loads
 
 import yaml
-from colorama import init, Fore, Style
+from colorama import init, Fore
 
 import os
 
@@ -26,8 +26,6 @@ with open(dir_path + "/config.yaml") as f:
 
 response = requests.get(str(site), verify=False)
 data = loads(response.content)
-feed = data['feed']
-
 
 def json_extract(obj, key):
     arr = []
@@ -48,41 +46,33 @@ def json_extract(obj, key):
     return values
 
 
-myval = json_extract(feed, "$t")
-
 count = 0
 available_count = 0
-for line in myval:
-    if line.startswith('A') or count != 0:
-        count = count + 1
-        if line.startswith('A') is False:
-
-            # We now have a JSON string representing an entry
-            json_line = loads(line)
-            available = json_line['is_available']
-            if available is True:
-                purple_found = False
-                green_found = False
-                for purple in purple_set:
-                    if (json_line['site_name'].find(purple) != -1):
-                        purple_found = True
-                for green in green_set:
-                    if (json_line['site_name'].find(green) != -1):
-                        green_found = True
-                prefix = Fore.MAGENTA if purple_found else Fore.RESET
-                if purple_found:
-                    prefix = Fore.MAGENTA
-                elif green_found:
-                    prefix = Fore.GREEN
-                else:
-                    prefix = Fore.RESET
-                print(prefix + json_line['site_name'])
-                print(prefix + json_line['url'])
-                print(prefix + str(json_line['appointment_count']) + " appointment slots available")
-                available_count = available_count + json_line['appointment_count']
-                print(prefix + json_line['appointment_times'])
-                print()
-            if count == 2:
-                count = 0
+for line in data:
+    available = line['is_available']
+    if available is True:
+        purple_found = False
+        green_found = False
+        for purple in purple_set:
+            if (line['site_name'].find(purple) != -1):
+                purple_found = True
+        for green in green_set:
+            if (line['site_name'].find(green) != -1):
+                green_found = True
+        prefix = Fore.MAGENTA if purple_found else Fore.RESET
+        if purple_found:
+            prefix = Fore.MAGENTA
+        elif green_found:
+            prefix = Fore.GREEN
+        else:
+            prefix = Fore.RESET
+        print(prefix + line['site_name'])
+        print(prefix + line['url'])
+        print(prefix + str(line['appointment_count']) + " appointment slots available")
+        available_count = available_count + line['appointment_count']
+        print(prefix + line['appointment_times'])
+        print()
+    if count == 2:
+        count = 0
 if available_count > 0:
     print("Available appointments total: " + str(available_count))
