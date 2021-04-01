@@ -25,7 +25,13 @@ with open(dir_path + "/config.yaml") as f:
                 site = v
 
 response = requests.get(str(site), verify=False)
-data = loads(response.content)
+feed = loads(response.content)
+portals = feed['portals']
+data = feed['locations']
+portal_dict = {}
+
+for portal in portals:
+    portal_dict[portal['key']] = portal['url']
 
 def json_extract(obj, key):
     arr = []
@@ -49,15 +55,19 @@ def json_extract(obj, key):
 count = 0
 available_count = 0
 for line in data:
-    available = line['is_available']
+    # print(str(line))
+    # print(portal_dict[line['portal']])
+    # continue
+
+    available = line['available']
     if available is True:
         purple_found = False
         green_found = False
         for purple in purple_set:
-            if (line['site_name'].find(purple) != -1):
+            if (line['name'].find(purple) != -1):
                 purple_found = True
         for green in green_set:
-            if (line['site_name'].find(green) != -1):
+            if (line['name'].find(green) != -1):
                 green_found = True
         prefix = Fore.MAGENTA if purple_found else Fore.RESET
         if purple_found:
@@ -66,8 +76,9 @@ for line in data:
             prefix = Fore.GREEN
         else:
             prefix = Fore.RESET
-        print(prefix + line['site_name'])
-        print(prefix + line['url'])
+        print(prefix + line['name'])
+        print(prefix + line['area'])
+        print(prefix + portal_dict[line['portal']])
         print(prefix + str(line['appointment_count']) + " appointment slots available")
         available_count = available_count + line['appointment_count']
         print(prefix + line['appointment_times'])
