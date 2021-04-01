@@ -76,12 +76,14 @@ for line in data:
             prefix = Fore.GREEN
         else:
             prefix = Fore.RESET
+
+
         print(prefix + line['name'])
         print(prefix + line['area'])
         print(prefix + portal_dict[line['portal']])
-        print(prefix + str(line['appointment_count']) + " appointment slots available")
-        available_count = available_count + line['appointment_count']
-        print(prefix + line['appointment_times'])
+        print(prefix + str(line['appointments']['count']) + " appointment slots available")
+        available_count = available_count + line['appointments']['count']
+        print(prefix + str(line['appointments']['summary']))
         print()
     if count == 2:
         count = 0
